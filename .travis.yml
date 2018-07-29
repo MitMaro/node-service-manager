@@ -1,0 +1,41 @@
+sudo: false
+notifications:
+  email:
+    on_success: never
+    on_failure: always
+language: node_js
+branches:
+  only:
+  - master
+  - /^v\d+\.\d+\.\d+$/
+stages:
+  - test
+  - deploy
+jobs:
+  include:
+    - stage: test
+      node_js: 10
+      script: ./scripts/test.bash :unit
+    - stage: test
+      node_js: 8
+      before_script: npm install coveralls
+      script:
+        - ./scripts/test.bash :coverage
+        - ./scripts/lint.bash
+      after_script: nyc report --reporter=text-lcov | coveralls
+    - stage: test
+      node_js: 6
+      script: ./scripts/test.bash :unit
+    - stage: deploy
+      node_js: 8
+      skip_cleanup: true
+      script: ./scripts/build.bash
+      deploy:
+        provider: npm
+        email: mitmaro@gmail.com
+        skip_cleanup: true
+        api_key:
+          secure: "ectcDUUGQqk8NHEu1DK7gEypQiRW4mTqWKSOYcltdy5knxgpFbImW6FJzqmXEhfrlLt2oT5g6H5bXE8mzDSedCTBZwJim/hDbcUX0Dy+tF6s3+cZ3BzCb3eo0bASSMqx/ZqS5ORQ8T737bAbo2BYVbAiNAGW/lifkn3L4EYPsdu6p1wiU4ZA9jz64XHt7dJi2Ap6T6leJc1ehGvmD/XsH05T9UzJgOeclliB4ndk5Ti8J3PmLz15DgPnbIQqnBg/7EtE1utdrq+3V66CvWVkw7/yioUwel9Pgh4C89Z4TRvVIT5jaO0nSsnuZ7LLm/iRJ75JPcoCSWBDo930C5t/ur1fzoPxTSluD2eHOJCW7VR/hf8FF1roe83ftSEhAx+TNH9ROoSZ+SsB493y+HO4khgi2VDlUf8lG0Y/5Cg7F1CDGMi8IJWupJFutMGf9M/PN6tFleyi0kV2QVMkrHi83Xi9nYTppCoiGxPSxS3OPooOZxhMP6QBGmklbIbpuCzdtjWc/63l6PmJ83Pb6dRt6cIWWX2cXW1OFgXjCJgpRgy580wleG91iwHkpJCQOLiLK1Bd30s2Dr7TDmE5hLoiyBVgorWdjvBM/F6neg+pNwqrnpierxabbMldRHJ/RhmMmyR9rahUkCKcVXdYluJA8DbD4Zr1wDrXg/qSM9N6kkA="
+        on:
+          tags: true
+          repo: MitMaro/node-service-manager
