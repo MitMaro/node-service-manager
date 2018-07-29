@@ -16,7 +16,6 @@
 		"text-summary",
 		"html"
 	],
-	"all": true,
 	"check-coverage": true,
 	"per-file": true,
 	"report-dir": "./coverage",
