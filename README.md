@@ -177,11 +177,6 @@ Development is done using Node 8 and NPM 5, and tested against both Node 6, Node
 * Make changes, add tests, etc.
 * Run linting and test suite using `npm run test`
 
-### Debugging
-
-This library uses [debug][debug] to produce debugging output. To enable add `DEBUG=server-shutdown` before
-your run command.
-
 ## License
 
 This project is released under the ISC license. See [LICENSE][LICENSE].
